@@ -7,18 +7,22 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import su.zencode.testapp03.PrnkApiClient.MoxyAppApiClient;
 import su.zencode.testapp03.PrnkRepositories.DataRepository;
+import su.zencode.testapp03.PrnkRepositories.Selector;
 import su.zencode.testapp03.PrnkRepositories.TextBlock;
 
 public class PrnkFetchr {
     private static final String TAG = "PrnkFetchr";
     private PrnkTestAppPresenter mPresenter;
+    private DataRepository mDataRepository;
 
     public PrnkFetchr(final PrnkTestAppPresenter presenter) {
         mPresenter = presenter;
+        mDataRepository = DataRepository.getInstance();
     }
 
     public String fetchData() {
@@ -72,12 +76,18 @@ public class PrnkFetchr {
                 case "picture":
                     break;
                 case "selector":
+                    Selector selector = mDataRepository.getSelector(itemToShow);
+                    if(selector == null) {
+                        selector = parseSelector(itemToShow, dataJsonArray);
+                        mDataRepository.addSelector(selector);
+                    }
+                    mPresenter.setupSelector(selector);
                     break;
                 default:
-                    TextBlock textBlock = DataRepository.getInstance().getTextBlock(itemToShow);
+                    TextBlock textBlock = mDataRepository.getTextBlock(itemToShow);
                     if(textBlock == null) {
                         textBlock = parseTextBlock(itemToShow, dataJsonArray);
-                        DataRepository.getInstance().addTextBlock(textBlock);
+                        mDataRepository.addTextBlock(textBlock);
                     }
                     mPresenter.setupTextBlock(textBlock);
                     break;
@@ -91,8 +101,29 @@ public class PrnkFetchr {
             JSONObject jsonArrayItem = dataJsonArray.getJSONObject(i);
             if(jsonArrayItem.getString("name").equals(itemName)){
                 String blockId = jsonArrayItem.getString("name");
-                String blockText = jsonArrayItem.getString("text");
+                JSONObject jsonBlockData = jsonArrayItem.getJSONObject("data");
+                String blockText = jsonBlockData.getString("text");
                 return new TextBlock(blockId, blockText);
+            }
+        }
+        return null;
+    }
+
+    private Selector parseSelector(String itemName, JSONArray dataJsonArray) throws JSONException {
+        for(int i = 0; i < dataJsonArray.length(); i++) {
+            JSONObject jsonArrayItem = dataJsonArray.getJSONObject(i);
+            if(jsonArrayItem.getString("name").equals(itemName)){
+                JSONObject blockData = jsonArrayItem.getJSONObject("data");
+                int selectedId = blockData.getInt("selectedId");
+                JSONArray variantsJsonArray = blockData.getJSONArray("variants");
+                ArrayList<String> variants = new ArrayList<>();
+                for(int j = 0; j < variantsJsonArray.length(); j++) {
+                    JSONObject variant = variantsJsonArray.getJSONObject(i);
+                    int index = variant.getInt("id");
+                    String text = variant.getString("text");
+                    variants.add(index, text);
+                }
+                return new Selector(itemName, selectedId,variants);
             }
         }
         return null;

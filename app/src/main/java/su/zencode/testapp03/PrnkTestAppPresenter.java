@@ -9,6 +9,7 @@ import java.util.List;
 
 import su.zencode.testapp03.PrnkRepositories.DataRepository;
 import su.zencode.testapp03.PrnkRepositories.Picture;
+import su.zencode.testapp03.PrnkRepositories.Selector;
 import su.zencode.testapp03.PrnkRepositories.TextBlock;
 
 @InjectViewState
@@ -36,7 +37,7 @@ public class PrnkTestAppPresenter extends MvpPresenter<PrnkTestAppView> {
         getViewState().updatePictureDrawable(id, drawable);
     }
 
-    public void setupSelector() {
+    public void setupSelector(Selector selector) {
 
     }
 }
