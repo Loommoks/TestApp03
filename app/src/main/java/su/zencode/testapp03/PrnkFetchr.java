@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 import su.zencode.testapp03.PrnkApiClient.MoxyAppApiClient;
 import su.zencode.testapp03.PrnkRepositories.DataRepository;
+import su.zencode.testapp03.PrnkRepositories.Picture;
 import su.zencode.testapp03.PrnkRepositories.Selector;
 import su.zencode.testapp03.PrnkRepositories.TextBlock;
 
@@ -74,6 +75,12 @@ public class PrnkFetchr {
             String itemToShow = viewJsonArray.getString(i);
             switch (itemToShow) {
                 case "picture":
+                    Picture picture = mDataRepository.getPicture(itemToShow);
+                    if(picture == null) {
+                        picture = parsePicture(itemToShow, dataJsonArray);
+                        mDataRepository.addPicture(picture);
+                    }
+                    mPresenter.setupPicture(picture);
                     break;
                 case "selector":
                     Selector selector = mDataRepository.getSelector(itemToShow);
@@ -124,6 +131,20 @@ public class PrnkFetchr {
                     variants.add(index, text);
                 }
                 return new Selector(itemName, selectedId,variants);
+            }
+        }
+        return null;
+    }
+
+    private Picture parsePicture(String itemName, JSONArray dataJsonArray)
+            throws JSONException {
+        for(int i = 0; i < dataJsonArray.length(); i++) {
+            JSONObject jsonArrayItem = dataJsonArray.getJSONObject(i);
+            if(jsonArrayItem.getString("name").equals(itemName)){
+                JSONObject jsonBlockData = jsonArrayItem.getJSONObject("data");
+                String pictureDescription = jsonBlockData.getString("text");
+                String pictureUrl = jsonBlockData.getString("url");
+                return new Picture(itemName,pictureUrl, pictureDescription);
             }
         }
         return null;
