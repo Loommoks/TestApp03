@@ -1,5 +1,6 @@
 package su.zencode.testapp03;
 
+import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -10,6 +11,8 @@ import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import java.util.ArrayList;
+
+import su.zencode.testapp03.PrnkRepositories.Picture;
 
 public class MainActivity extends MvpAppCompatActivity implements PrnkTestAppView{
     @InjectPresenter
@@ -62,7 +65,12 @@ public class MainActivity extends MvpAppCompatActivity implements PrnkTestAppVie
     }
 
     @Override
-    public void setPicture(String url, String description) {
+    public void setPicture(Picture picture) {
+
+    }
+
+    @Override
+    public void updatePictureDrawable(String id, Drawable drawable) {
 
     }
 
