@@ -9,6 +9,7 @@ import java.util.List;
 
 import su.zencode.testapp03.PrnkRepositories.DataRepository;
 import su.zencode.testapp03.PrnkRepositories.Picture;
+import su.zencode.testapp03.PrnkRepositories.TextBlock;
 
 @InjectViewState
 public class PrnkTestAppPresenter extends MvpPresenter<PrnkTestAppView> {
@@ -19,9 +20,9 @@ public class PrnkTestAppPresenter extends MvpPresenter<PrnkTestAppView> {
         new PrnkFetchr(this).fetchData();
     }
 
-    public void setupTextBlock(String text){
+    public void setupTextBlock(TextBlock textBlock){
         getViewState().showTextBlock();
-        getViewState().setTextBlock(text);
+        getViewState().setTextBlock(textBlock.getText());
     }
 
     public void setupPicture(Picture picture) {

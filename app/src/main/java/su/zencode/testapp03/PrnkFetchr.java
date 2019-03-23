@@ -10,6 +10,8 @@ import org.json.JSONObject;
 import java.util.concurrent.TimeUnit;
 
 import su.zencode.testapp03.PrnkApiClient.MoxyAppApiClient;
+import su.zencode.testapp03.PrnkRepositories.DataRepository;
+import su.zencode.testapp03.PrnkRepositories.TextBlock;
 
 public class PrnkFetchr {
     private static final String TAG = "PrnkFetchr";
@@ -72,13 +74,27 @@ public class PrnkFetchr {
                 case "selector":
                     break;
                 default:
-                    JSONObject textBlockJson = parseItem(itemToShow, dataJsonArray);
+                    TextBlock textBlock = DataRepository.getInstance().getTextBlock(itemToShow);
+                    if(textBlock == null) {
+                        textBlock = parseTextBlock(itemToShow, dataJsonArray);
+                        DataRepository.getInstance().addTextBlock(textBlock);
+                    }
+                    mPresenter.setupTextBlock(textBlock);
                     break;
             }
         }
     }
 
-    private JSONObject parseItem(String itemName, JSONArray dataJsonArray) {
+    private TextBlock parseTextBlock(String itemName, JSONArray dataJsonArray)
+            throws JSONException {
+        for(int i = 0; i < dataJsonArray.length(); i++) {
+            JSONObject jsonArrayItem = dataJsonArray.getJSONObject(i);
+            if(jsonArrayItem.getString("name").equals(itemName)){
+                String blockId = jsonArrayItem.getString("name");
+                String blockText = jsonArrayItem.getString("text");
+                return new TextBlock(blockId, blockText);
+            }
+        }
         return null;
     }
 }
