@@ -32,22 +32,12 @@ public class PrnkFetchr {
             @Override
             protected String doInBackground(Void... voids) {
                 String url = "https://prnk.blob.core.windows.net/tmp/JSONSample.json";
-                sleepSecond(1);
                 return MoxyAppApiClient.getUrlString(url);
             }
 
             @Override
             protected void onPostExecute(String s) {
                 parseJson(s);
-                //presenter.setupTextBlock(s);
-            }
-
-            private void sleepSecond(long sec) {
-                try {
-                    TimeUnit.SECONDS.sleep(sec);
-                } catch (InterruptedException e) {
-                    Log.e(TAG, "TimeUnit sleep error", e);
-                }
             }
         };
         asyncCall.execute();
@@ -125,10 +115,10 @@ public class PrnkFetchr {
                 JSONArray variantsJsonArray = blockData.getJSONArray("variants");
                 ArrayList<String> variants = new ArrayList<>();
                 for(int j = 0; j < variantsJsonArray.length(); j++) {
-                    JSONObject variant = variantsJsonArray.getJSONObject(i);
+                    JSONObject variant = variantsJsonArray.getJSONObject(j);
                     int index = variant.getInt("id");
                     String text = variant.getString("text");
-                    variants.add(index, text);
+                    variants.add(text);
                 }
                 return new Selector(itemName, selectedId,variants);
             }

@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import su.zencode.testapp03.PrnkRepositories.DataRepository;
@@ -17,19 +18,19 @@ public class PrnkTestAppPresenter extends MvpPresenter<PrnkTestAppView> {
     private List<Picture> mPictures;
 
     public PrnkTestAppPresenter() {
-        getViewState().showTextBlock();
+        /** getViewState().showTextBlock(new TextBlock("placeholderText",
+                "Presenter in action")); */
+        mPictures = new ArrayList<>();
         new PrnkFetchr(this).fetchData();
     }
 
     public void setupTextBlock(TextBlock textBlock){
-        getViewState().showTextBlock();
-        getViewState().setTextBlock(textBlock.getText());
+        getViewState().showTextBlock(textBlock);
     }
 
     public void setupPicture(Picture picture) {
         mPictures.add(picture);
-        getViewState().showPicture();
-        getViewState().setPicture(picture);
+        getViewState().showPicture(picture);
     }
 
     public void updatePictureDrawable(String id, Drawable drawable) {
@@ -38,6 +39,6 @@ public class PrnkTestAppPresenter extends MvpPresenter<PrnkTestAppView> {
     }
 
     public void setupSelector(Selector selector) {
-
+        getViewState().showSelector(selector);
     }
 }

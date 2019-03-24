@@ -7,19 +7,18 @@ import com.arellomobile.mvp.MvpView;
 import java.util.ArrayList;
 
 import su.zencode.testapp03.PrnkRepositories.Picture;
+import su.zencode.testapp03.PrnkRepositories.Selector;
+import su.zencode.testapp03.PrnkRepositories.TextBlock;
 
 public interface PrnkTestAppView extends MvpView {
-    void showTextBlock();
+    void showTextBlock(TextBlock textBlock);
     void hideTextBlock();
-    void setTextBlock(String text);
 
-    void showPicture();
+    void showPicture(Picture picture);
     void hidePicture();
-    void setPicture(Picture picture);
     void updatePictureDrawable(String id, Drawable drawable);
 
-    void showSelector();
+    void showSelector(Selector selector);
     void hideSelector();
-    void setSelector(ArrayList<String> listItems);
 
 }

@@ -1,61 +1,99 @@
 package su.zencode.testapp03;
 
 import android.graphics.drawable.Drawable;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.NonNull;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
-import java.util.ArrayList;
-
 import su.zencode.testapp03.PrnkRepositories.Picture;
+import su.zencode.testapp03.PrnkRepositories.Selector;
+import su.zencode.testapp03.PrnkRepositories.TextBlock;
 
 public class MainActivity extends MvpAppCompatActivity implements PrnkTestAppView{
     @InjectPresenter
     PrnkTestAppPresenter mPrnkTestAppPresenter;
 
     private static final String TAG = "MainActivity";
-    private TextView mMessageTextView;
-    private Button mStartButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        }
 
-        mMessageTextView = findViewById(R.id.message_text_view);
-        mStartButton = findViewById(R.id.make_call_button);
-        mStartButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //String response = ;
-                //new PrnkFetchr().fetchData(mMessageTextView);
-                //mMessageTextView.setText(response);
-            }
-        });
+    @Override
+    public void showTextBlock(TextBlock textBlock) {
+        ViewGroup rootView = findViewById(R.id.activity_main);
+        View cardView = getCardViewInstance(rootView);
+        TextView textView = getTextViewInstance(textBlock);
+        attachViewsToRoot(rootView, cardView, textView);
     }
 
     @Override
-    public void showTextBlock() {
-        mMessageTextView.setText("Now visible :))");
+    public void showSelector(Selector selector) {
+        ViewGroup rootView = findViewById(R.id.activity_main);
+        View cardView = getCardViewInstance(rootView);
+        //todo update spinner generation
+        TextView textView = new TextView(this);
+        textView.setText(selector.getId());
+        textView.setTextSize(20);
+        textView.setGravity(Gravity.CENTER_HORIZONTAL);
+        //todo </update>
+        attachViewsToRoot(rootView, cardView, textView);
+    }
+
+    @Override
+    public void showPicture(Picture picture) {
+        ViewGroup rootView = findViewById(R.id.activity_main);
+        View cardView = getCardViewInstance(rootView);
+        ImageView imageView = getImageViewInstance(picture);
+        attachViewsToRoot(rootView, cardView, imageView);
+    }
+
+    private void attachViewsToRoot(ViewGroup rootView, View cardView, View textView) {
+        ((ViewGroup) cardView).addView(textView);
+        rootView.addView(cardView);
+    }
+
+    @NonNull
+    private TextView getTextViewInstance(TextBlock textBlock) {
+        TextView textView = new TextView(this);
+        textView.setText(textBlock.getText());
+        textView.setTextSize(20);
+        textView.setGravity(Gravity.CENTER_HORIZONTAL);
+        return textView;
+    }
+
+    private Spinner getTextViewInstance(Selector selector) {
+        Spinner spinner = new Spinner(this);
+        //todo update spinner
+        return spinner;
+    }
+
+    private ImageView getImageViewInstance(Picture picture) {
+        ImageView imageView = new ImageView(this);
+        imageView.setContentDescription(picture.getDescription());
+        Drawable drawable = getResources().getDrawable(R.drawable.in_progress);
+        imageView.setImageDrawable(drawable);
+        return imageView;
+    }
+
+    private View getCardViewInstance(ViewGroup rootView) {
+        return LayoutInflater.from(this)
+                    .inflate(R.layout.item_card_view,rootView,false);
     }
 
     @Override
     public void hideTextBlock() {
-
-    }
-
-    @Override
-    public void setTextBlock(String text) {
-        mMessageTextView.setText(text);
-    }
-
-    @Override
-    public void showPicture() {
 
     }
 
@@ -65,27 +103,12 @@ public class MainActivity extends MvpAppCompatActivity implements PrnkTestAppVie
     }
 
     @Override
-    public void setPicture(Picture picture) {
-
-    }
-
-    @Override
     public void updatePictureDrawable(String id, Drawable drawable) {
 
     }
 
     @Override
-    public void showSelector() {
-
-    }
-
-    @Override
     public void hideSelector() {
-
-    }
-
-    @Override
-    public void setSelector(ArrayList<String> listItems) {
 
     }
 }

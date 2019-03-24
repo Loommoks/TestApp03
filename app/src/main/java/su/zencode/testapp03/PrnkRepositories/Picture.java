@@ -12,6 +12,7 @@ public class Picture {
         mId = id;
         mUrl = url;
         mDescription = description;
+        mDrawable = null;
     }
 
     public String getId() {
