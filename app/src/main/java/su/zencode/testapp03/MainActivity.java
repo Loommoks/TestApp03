@@ -6,7 +6,6 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,8 +39,9 @@ public class MainActivity extends MvpAppCompatActivity implements PrnkTestAppVie
         setContentView(R.layout.activity_main);
 
         mRootView = findViewById(R.id.activity_main);
-        CardView cardView = (CardView) getCardViewInstance(mRootView);
-        mContainerView = cardView.findViewById(R.id.container_view);
+        CardView cardView = (CardView) LayoutInflater.from(this)
+                .inflate(R.layout.container_card_view,mRootView,false);
+        mContainerView = cardView.findViewById(R.id.container_root_view);
         mRootView.addView(cardView);
 
         mPictures = new HashMap<>();
@@ -49,57 +49,41 @@ public class MainActivity extends MvpAppCompatActivity implements PrnkTestAppVie
 
     @Override
     public void showTextBlock(TextBlock textBlock) {
-        //ViewGroup rootView = findViewById(R.id.activity_main);
-        //View cardView = getCardViewInstance(rootView);
         TextView textView = getTextViewInstance(textBlock);
-        attachViewsToRoot(mRootView, mContainerView, textView);
+        attachViewsToRoot(mContainerView, textView);
     }
 
     @Override
     public void showSelector(Selector selector) {
-        //ViewGroup rootView = findViewById(R.id.activity_main);
-        //View cardView = getCardViewInstance(rootView);
-        //todo update spinner generation
-        /**
-        TextView textView = new TextView(this);
-        textView.setText(selector.getId());
-        textView.setTextSize(20);
-        textView.setGravity(Gravity.CENTER_HORIZONTAL);*/
-        //todo </update>
         Spinner spinner = getSpinnerInstance(selector);
         spinner.setSelection(selector.getSelectedId());
-
-        attachViewsToRoot(mRootView, mContainerView, spinner);
+        attachViewsToRoot(mContainerView, spinner);
     }
 
     @Override
     public void showPicture(Picture picture) {
-        //ViewGroup rootView = findViewById(R.id.activity_main);
-        //View cardView = getCardViewInstance(rootView);
         ImageView imageView = getImageViewInstance(picture);
         mPictures.put(picture.getId(), imageView);
-        attachViewsToRoot(mRootView, mContainerView, imageView);
+        attachViewsToRoot(mContainerView, imageView);
     }
 
-    private void attachViewsToRoot(ViewGroup rootView, View cardView, View textView) {
+    private void attachViewsToRoot(View cardView, View textView) {
         ((ViewGroup) cardView).addView(textView);
-        //rootView.addView(cardView);
     }
 
     @NonNull
     private TextView getTextViewInstance(TextBlock textBlock) {
-        TextView textView = new TextView(this);
+        TextView textView = (TextView) LayoutInflater.from(this)
+                .inflate(R.layout.item_text_block,mContainerView,false);
         textView.setText(textBlock.getText());
-        textView.setTextSize(20);
-        textView.setGravity(Gravity.CENTER_HORIZONTAL);
         return textView;
     }
 
     private Spinner getSpinnerInstance(Selector selector) {
-        Spinner spinner = new Spinner(this);
-        //todo update spinner
+        Spinner spinner = (Spinner) LayoutInflater.from(this)
+                .inflate(R.layout.item_spinner,mContainerView,false);
         ArrayAdapter<String> adapter =
-                new ArrayAdapter<String>(
+                new ArrayAdapter<>(
                         this,
                         android.R.layout.simple_spinner_item,
                         selector.getVariants()
@@ -110,18 +94,14 @@ public class MainActivity extends MvpAppCompatActivity implements PrnkTestAppVie
     }
 
     private ImageView getImageViewInstance(Picture picture) {
-        ImageView imageView = new ImageView(this);
+        ImageView imageView = (ImageView) LayoutInflater.from(this)
+                .inflate(R.layout.item_image,mContainerView,false);
         imageView.setContentDescription(picture.getDescription());
         if(picture.getBitmap() == null) {
             Drawable drawable = getResources().getDrawable(R.drawable.in_progress);
             imageView.setImageDrawable(drawable);
         }
         return imageView;
-    }
-
-    private View getCardViewInstance(ViewGroup rootView) {
-        return LayoutInflater.from(this)
-                    .inflate(R.layout.item_card_view,rootView,false);
     }
 
     @Override

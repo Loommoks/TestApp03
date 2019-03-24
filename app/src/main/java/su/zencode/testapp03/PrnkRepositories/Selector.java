@@ -1,7 +1,5 @@
 package su.zencode.testapp03.PrnkRepositories;
 
-import java.util.ArrayList;
-
 public class Selector {
     private String mId;
     private int mSelectedId;
