@@ -1,5 +1,6 @@
 package su.zencode.testapp03;
 
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 
 import com.arellomobile.mvp.MvpView;
@@ -16,7 +17,7 @@ public interface PrnkTestAppView extends MvpView {
 
     void showPicture(Picture picture);
     void hidePicture();
-    void updatePictureDrawable(String id, Drawable drawable);
+    void updatePictureDrawable(String id, Bitmap bitmap);
 
     void showSelector(Selector selector);
     void hideSelector();

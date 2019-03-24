@@ -1,5 +1,7 @@
 package su.zencode.testapp03;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
@@ -14,6 +16,8 @@ import android.widget.TextView;
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
+import java.util.HashMap;
+
 import su.zencode.testapp03.PrnkRepositories.Picture;
 import su.zencode.testapp03.PrnkRepositories.Selector;
 import su.zencode.testapp03.PrnkRepositories.TextBlock;
@@ -22,12 +26,15 @@ public class MainActivity extends MvpAppCompatActivity implements PrnkTestAppVie
     @InjectPresenter
     PrnkTestAppPresenter mPrnkTestAppPresenter;
 
+    private HashMap<String, View> mPictures;
+
     private static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mPictures = new HashMap<>();
         }
 
     @Override
@@ -56,6 +63,7 @@ public class MainActivity extends MvpAppCompatActivity implements PrnkTestAppVie
         ViewGroup rootView = findViewById(R.id.activity_main);
         View cardView = getCardViewInstance(rootView);
         ImageView imageView = getImageViewInstance(picture);
+        mPictures.put(picture.getId(), imageView);
         attachViewsToRoot(rootView, cardView, imageView);
     }
 
@@ -73,7 +81,7 @@ public class MainActivity extends MvpAppCompatActivity implements PrnkTestAppVie
         return textView;
     }
 
-    private Spinner getTextViewInstance(Selector selector) {
+    private Spinner getSpinnerInstance(Selector selector) {
         Spinner spinner = new Spinner(this);
         //todo update spinner
         return spinner;
@@ -103,8 +111,10 @@ public class MainActivity extends MvpAppCompatActivity implements PrnkTestAppVie
     }
 
     @Override
-    public void updatePictureDrawable(String id, Drawable drawable) {
-
+    public void updatePictureDrawable(String id, Bitmap bitmap) {
+        ImageView imageView = (ImageView) mPictures.get(id);
+        Drawable drawable = new BitmapDrawable(getResources(), bitmap);
+        imageView.setImageDrawable(drawable);
     }
 
     @Override

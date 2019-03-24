@@ -1,5 +1,6 @@
 package su.zencode.testapp03.PrnkRepositories;
 
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 
 import java.util.ArrayList;
@@ -66,10 +67,10 @@ public class DataRepository {
         return null;
     }
 
-    public void setPicture(String id, Drawable drawable) {
+    public void setPicture(String id, Bitmap bitmap) {
         Picture picture = getPicture(id);
         if(picture != null) {
-            picture.setDrawable(drawable);
+            picture.setBitmap(bitmap);
         }
     }
 }

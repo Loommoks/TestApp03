@@ -1,18 +1,19 @@
 package su.zencode.testapp03.PrnkRepositories;
 
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 
 public class Picture {
     private String mId;
     private String mUrl;
     private String mDescription;
-    private Drawable mDrawable;
+    private Bitmap mBitmap;
 
     public Picture(String id, String url, String description) {
         mId = id;
         mUrl = url;
         mDescription = description;
-        mDrawable = null;
+        mBitmap = null;
     }
 
     public String getId() {
@@ -39,11 +40,11 @@ public class Picture {
         mDescription = description;
     }
 
-    public Drawable getDrawable() {
-        return mDrawable;
+    public Bitmap getBitmap() {
+        return mBitmap;
     }
 
-    public void setDrawable(Drawable drawable) {
-        mDrawable = drawable;
+    public void setBitmap(Bitmap bitmap) {
+        mBitmap = bitmap;
     }
 }
