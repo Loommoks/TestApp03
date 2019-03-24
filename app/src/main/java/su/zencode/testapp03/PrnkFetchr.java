@@ -112,12 +112,13 @@ public class PrnkFetchr {
                 JSONObject blockData = jsonArrayItem.getJSONObject("data");
                 int selectedId = blockData.getInt("selectedId");
                 JSONArray variantsJsonArray = blockData.getJSONArray("variants");
-                ArrayList<String> variants = new ArrayList<>();
+                //ArrayList<String> variants = new ArrayList<>();
+                String[] variants = new String[variantsJsonArray.length()];
                 for(int j = 0; j < variantsJsonArray.length(); j++) {
                     JSONObject variant = variantsJsonArray.getJSONObject(j);
-                    int index = variant.getInt("id");
+                    //int index = variant.getInt("id");
                     String text = variant.getString("text");
-                    variants.add(text);
+                    variants[j] = text;
                 }
                 return new Selector(itemName, selectedId,variants);
             }

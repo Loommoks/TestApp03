@@ -5,9 +5,9 @@ import java.util.ArrayList;
 public class Selector {
     private String mId;
     private int mSelectedId;
-    private ArrayList<String> variants;
+    private String[] variants;
 
-    public Selector(String id, int selectedId, ArrayList<String> variants) {
+    public Selector(String id, int selectedId, String[] variants) {
         mId = id;
         mSelectedId = selectedId;
         this.variants = variants;
@@ -29,11 +29,11 @@ public class Selector {
         mSelectedId = selectedId;
     }
 
-    public ArrayList<String> getVariants() {
+    public String[] getVariants() {
         return variants;
     }
 
-    public void setVariants(ArrayList<String> variants) {
+    public void setVariants(String[] variants) {
         this.variants = variants;
     }
 }

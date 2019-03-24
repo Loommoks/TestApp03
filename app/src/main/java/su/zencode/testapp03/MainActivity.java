@@ -9,6 +9,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -50,12 +51,15 @@ public class MainActivity extends MvpAppCompatActivity implements PrnkTestAppVie
         ViewGroup rootView = findViewById(R.id.activity_main);
         View cardView = getCardViewInstance(rootView);
         //todo update spinner generation
+        /**
         TextView textView = new TextView(this);
         textView.setText(selector.getId());
         textView.setTextSize(20);
-        textView.setGravity(Gravity.CENTER_HORIZONTAL);
+        textView.setGravity(Gravity.CENTER_HORIZONTAL);*/
         //todo </update>
-        attachViewsToRoot(rootView, cardView, textView);
+        Spinner spinner = getSpinnerInstance(selector);
+        spinner.setSelection(selector.getSelectedId());
+        attachViewsToRoot(rootView, cardView, spinner);
     }
 
     @Override
@@ -84,6 +88,14 @@ public class MainActivity extends MvpAppCompatActivity implements PrnkTestAppVie
     private Spinner getSpinnerInstance(Selector selector) {
         Spinner spinner = new Spinner(this);
         //todo update spinner
+        ArrayAdapter<String> adapter =
+                new ArrayAdapter<String>(
+                        this,
+                        android.R.layout.simple_spinner_item,
+                        selector.getVariants()
+                );
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
         return spinner;
     }
 
