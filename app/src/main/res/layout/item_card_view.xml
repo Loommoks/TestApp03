@@ -9,4 +9,12 @@
     card_view:cardElevation="4dp"
     card_view:cardCornerRadius="4dp">
 
+    <LinearLayout
+        android:id="@+id/container_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+    </LinearLayout>
+
 </android.support.v7.widget.CardView>

@@ -5,6 +5,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +29,8 @@ public class MainActivity extends MvpAppCompatActivity implements PrnkTestAppVie
     PrnkTestAppPresenter mPrnkTestAppPresenter;
 
     private HashMap<String, View> mPictures;
+    private ViewGroup mRootView;
+    private ViewGroup mContainerView;
 
     private static final String TAG = "MainActivity";
 
@@ -35,21 +38,27 @@ public class MainActivity extends MvpAppCompatActivity implements PrnkTestAppVie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mRootView = findViewById(R.id.activity_main);
+        CardView cardView = (CardView) getCardViewInstance(mRootView);
+        mContainerView = cardView.findViewById(R.id.container_view);
+        mRootView.addView(cardView);
+
         mPictures = new HashMap<>();
         }
 
     @Override
     public void showTextBlock(TextBlock textBlock) {
-        ViewGroup rootView = findViewById(R.id.activity_main);
-        View cardView = getCardViewInstance(rootView);
+        //ViewGroup rootView = findViewById(R.id.activity_main);
+        //View cardView = getCardViewInstance(rootView);
         TextView textView = getTextViewInstance(textBlock);
-        attachViewsToRoot(rootView, cardView, textView);
+        attachViewsToRoot(mRootView, mContainerView, textView);
     }
 
     @Override
     public void showSelector(Selector selector) {
-        ViewGroup rootView = findViewById(R.id.activity_main);
-        View cardView = getCardViewInstance(rootView);
+        //ViewGroup rootView = findViewById(R.id.activity_main);
+        //View cardView = getCardViewInstance(rootView);
         //todo update spinner generation
         /**
         TextView textView = new TextView(this);
@@ -59,21 +68,22 @@ public class MainActivity extends MvpAppCompatActivity implements PrnkTestAppVie
         //todo </update>
         Spinner spinner = getSpinnerInstance(selector);
         spinner.setSelection(selector.getSelectedId());
-        attachViewsToRoot(rootView, cardView, spinner);
+
+        attachViewsToRoot(mRootView, mContainerView, spinner);
     }
 
     @Override
     public void showPicture(Picture picture) {
-        ViewGroup rootView = findViewById(R.id.activity_main);
-        View cardView = getCardViewInstance(rootView);
+        //ViewGroup rootView = findViewById(R.id.activity_main);
+        //View cardView = getCardViewInstance(rootView);
         ImageView imageView = getImageViewInstance(picture);
         mPictures.put(picture.getId(), imageView);
-        attachViewsToRoot(rootView, cardView, imageView);
+        attachViewsToRoot(mRootView, mContainerView, imageView);
     }
 
     private void attachViewsToRoot(ViewGroup rootView, View cardView, View textView) {
         ((ViewGroup) cardView).addView(textView);
-        rootView.addView(cardView);
+        //rootView.addView(cardView);
     }
 
     @NonNull
@@ -102,8 +112,10 @@ public class MainActivity extends MvpAppCompatActivity implements PrnkTestAppVie
     private ImageView getImageViewInstance(Picture picture) {
         ImageView imageView = new ImageView(this);
         imageView.setContentDescription(picture.getDescription());
-        Drawable drawable = getResources().getDrawable(R.drawable.in_progress);
-        imageView.setImageDrawable(drawable);
+        if(picture.getBitmap() == null) {
+            Drawable drawable = getResources().getDrawable(R.drawable.in_progress);
+            imageView.setImageDrawable(drawable);
+        }
         return imageView;
     }
 
