@@ -9,15 +9,18 @@ import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import su.zencode.testapp03.PrnkRepositories.Picture;
 import su.zencode.testapp03.PrnkRepositories.Selector;
@@ -26,7 +29,7 @@ import su.zencode.testapp03.PrnkRepositories.TextBlock;
 public class MainActivity extends MvpAppCompatActivity implements PrnkTestAppView{
     @InjectPresenter
     PrnkTestAppPresenter mPrnkTestAppPresenter;
-
+    private HashMap<View, Object> mViews;
     private HashMap<String, View> mPictures;
     private ViewGroup mRootView;
     private ViewGroup mContainerView;
@@ -45,12 +48,20 @@ public class MainActivity extends MvpAppCompatActivity implements PrnkTestAppVie
         mRootView.addView(cardView);
 
         mPictures = new HashMap<>();
+        mViews = new HashMap<>();
         }
 
     @Override
     public void showTextBlock(TextBlock textBlock) {
         TextView textView = getTextViewInstance(textBlock);
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onTextItemClicked(v);
+            }
+        });
         attachViewsToRoot(mContainerView, textView);
+        mViews.put(textView, textBlock);
     }
 
     @Override
@@ -58,17 +69,59 @@ public class MainActivity extends MvpAppCompatActivity implements PrnkTestAppVie
         Spinner spinner = getSpinnerInstance(selector);
         spinner.setSelection(selector.getSelectedId());
         attachViewsToRoot(mContainerView, spinner);
+        mViews.put(spinner, selector);
+
+        AdapterView.OnItemSelectedListener itemSelectedListener =
+                getOnItemSelectedListenerInstance();
+        spinner.setOnItemSelectedListener(itemSelectedListener);
     }
 
     @Override
     public void showPicture(Picture picture) {
         ImageView imageView = getImageViewInstance(picture);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onPictureItemClicked(v);
+            }
+        });
         mPictures.put(picture.getId(), imageView);
         attachViewsToRoot(mContainerView, imageView);
+        mViews.put(imageView, picture);
     }
 
     private void attachViewsToRoot(View cardView, View textView) {
         ((ViewGroup) cardView).addView(textView);
+    }
+
+    public void onTextItemClicked(View view) {
+        mPrnkTestAppPresenter.processTextItemClick((TextBlock) mViews.get(view));
+    }
+
+    public void onPictureItemClicked(View view) {
+        mPrnkTestAppPresenter.processPictureClick((Picture) mViews.get(view));
+    }
+
+    public void onSelectorItemClicked(View view, int position) {
+        mPrnkTestAppPresenter.processSelectorClick(
+                (Selector) mViews.get(view),
+                position
+        );
+    }
+
+    @NonNull
+    private AdapterView.OnItemSelectedListener getOnItemSelectedListenerInstance() {
+        return new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                onSelectorItemClicked(parent, position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        };
     }
 
     @NonNull
@@ -105,13 +158,8 @@ public class MainActivity extends MvpAppCompatActivity implements PrnkTestAppVie
     }
 
     @Override
-    public void hideTextBlock() {
-
-    }
-
-    @Override
-    public void hidePicture() {
-
+    public void showToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -121,8 +169,4 @@ public class MainActivity extends MvpAppCompatActivity implements PrnkTestAppVie
         imageView.setImageDrawable(drawable);
     }
 
-    @Override
-    public void hideSelector() {
-
-    }
 }

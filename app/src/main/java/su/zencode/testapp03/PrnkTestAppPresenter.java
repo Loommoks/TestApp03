@@ -50,4 +50,28 @@ public class PrnkTestAppPresenter extends MvpPresenter<PrnkTestAppView> {
     public void setupSelector(Selector selector) {
         getViewState().showSelector(selector);
     }
+
+    public void processTextItemClick(TextBlock textBlock) {
+        String type = "TextBlock";
+        String id = textBlock.getId();
+        //processClick logic
+        String message = type + ", " + id + " clicked";
+        getViewState().showToast(message);
+    }
+
+    public void processPictureClick(Picture picture) {
+        String type = "Picture";
+        String id = picture.getId();
+        //processClick logic
+        String message = type + ", " + id + " clicked";
+        getViewState().showToast(message);
+    }
+
+    public void processSelectorClick(Selector selector, int position) {
+        String type = "Selector";
+        String id = selector.getId();
+        //processClick logic
+        String message = type + ", " +id + ", item #"+position +" clicked";
+        getViewState().showToast(message);
+    }
 }
